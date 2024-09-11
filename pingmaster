@@ -13,15 +13,15 @@ DEBUG = False
 PROXY = 'http://1.1.1.1:80'
 
 
-class Network:
+class เครือข่าย:
     def __init__(self, a=1, b=1, c=1, d=1):
         """
         192.168.0.100
          a . b .c. d
-        :param a: เลข 8 บิตแรก
-        :param b: เลข 8 บิตถัดไป
-        :param c: เลข 8 บิตถัดไป
-        :param d: เลข 8 บิตสุดท้าย
+        :param a: บิตแรก 8 บิต
+        :param b: บิตถัดไป 8 บิต
+        :param c: บิตถัดไป 8 บิต
+        :param d: บิตสุดท้าย 8 บิต
         """
 
         self.a = int(a)
@@ -37,15 +37,15 @@ class Network:
         self.end_c = 255
         self.end_d = 255
 
-    def set_end(self, end_a, end_b, end_c, end_d):
+    def กำหนดจุดสิ้นสุด(self, end_a, end_b, end_c, end_d):
         self.end_a = int(end_a)
         self.end_b = int(end_b)
         self.end_c = int(end_c)
         self.end_d = int(end_d)
 
-    def set_subnet(self, subnet_mask):
+    def กำหนดซับเน็ต(self, subnet_mask):
         """
-        :param subnet_mask: จำนวนบิตของเครือข่าย (0-31), ประเภท: int
+        :param subnet_mask: จำนวนบิตเครือข่าย (0-31), ประเภท: int
         """
         subnet_mask = int(subnet_mask)
         sub_a = ''
@@ -100,21 +100,12 @@ class Network:
             raise StopIteration
         return f'{self.a}.{self.b}.{self.c}.{self.d}'
 
-    def __gt__(self, other):
-        return self.a > other.a and self.b > other.b and self.c > other.c and self.d > other.d
-
-    def __lt__(self, other):
-        return self.a < other.a and self.b < other.b and self.c < other.c and self.d < other.d
-
-    def __eq__(self, other):
-        return self.a == other.a and self.b == other.b and self.c == other.c and self.d == other.d
-
     def __str__(self):
         return f'{self.a}.{self.b}.{self.c}.{self.d}'
 
     def __repr__(self):
-        return f'<\033[1;34mเครือข่ายเริ่มต้น:\033[0m {self.start_a}.{self.start_b}.{self.start_c}.{self.start_d}  ' \
-               f'\033[1;34mสิ้นสุด:\033[0m {self.end_a}.{self.end_b}.{self.end_c}.{self.end_d}>'
+        return f'<เครือข่าย เริ่มต้น: {self.start_a}.{self.start_b}.{self.start_c}.{self.start_d}  ' \
+               f'สิ้นสุด: {self.end_a}.{self.end_b}.{self.end_c}.{self.end_d}>'
 
     def __len__(self):
         return (self.end_a - self.start_a or 1) * (self.end_b - self.start_b or 1) * \
@@ -128,14 +119,14 @@ class Network:
     def start_ip(self):
         return f'{self.start_a}.{self.start_b}.{self.start_c}.{self.start_d}'
 
-    def reset(self):
+    def รีเซ็ต(self):
         self.a = self.start_a
         self.b = self.start_b
         self.c = self.start_c
         self.d = self.start_d
 
 
-def scan(ip_host):
+def สแกน(ip_host):
     try:
         ping_val = ping(ip_host, size=8)
     except Exception as e:
@@ -168,47 +159,70 @@ def scan(ip_host):
         return
 
 
-print("\033[1;35m╔═══╗──────╔═╗╔═╗─────╔╗\n║╔═╗║──────║║╚╝║║────╔╝╚╗\n║╚═╝╠╦═╗╔══╣╔╗╔╗╠══╦═╩╗╔╬══╦═╗\n║╔══╬╣╔╗╣╔╗║║║║║║╔╗║══╣║║║═╣╔╝\n║║──║║║║║╚╝║║║║║║╔╗╠══║╚╣║═╣║\n╚╝──╚╩╝╚╩═╗╠╝╚╝╚╩╝╚╩══╩═╩══╩╝\n────────╔═╝║\n────────╚══╝\033[0m")
 
-print("\033[1;31m▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄\033[0m")
-print("\033[1;33m░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░\033[0m")
-print("\033[1;36mพัฒนาโดย: EKROM\033[0m")
-print("\033[1;36mTelegram: @Akucinta\033[0m")
-print("\033[1;36mYouTube: @EKROM\033[0m")
-print("\033[1;31m▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄\033[0m")
+GREEN = "\033[32m"  # สีเขียวเข้ม
+RESET = "\033[0m"  # รีเซ็ตสีกลับเป็นค่าเริ่มต้น
+
+print(f"{GREEN}███████╗██╗  ██╗██████╗  ██████╗ ███╗   ███╗{RESET}")
+print(f"{GREEN}██╔════╝██║ ██╔╝██╔══██╗██╔═══██╗████╗ ████║{RESET}")
+print(f"{GREEN}█████╗  █████╔╝ ██████╔╝██║   ██║██╔████╔██║{RESET}")
+print(f"{GREEN}██╔══╝  ██╔═██╗ ██╔══██╗██║   ██║██║╚██╔╝██║{RESET}")
+print(f"{GREEN}███████╗██║  ██╗██║  ██║╚██████╔╝██║ ╚═╝ ██║{RESET}")
+print(f"{GREEN}╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝{RESET}")
+
+GREEN = "\033[32m"  # สีเขียว
+RESET = "\033[0m"    # รีเซ็ตสีกลับเป็นค่าเริ่มต้น
+
+print(f"{GREEN}▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄{RESET}")
+print(f"{GREEN}░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░{RESET}")
+BLUE = "\033[34m"  # สีน้ำเงิน (ฟ้า)
+RESET = "\033[0m"  # รีเซ็ตสีกลับเป็นค่าเริ่มต้น
+
+print(f"{BLUE}พัฒนาโดย:EKROMVPN{RESET}")
+print(f"{BLUE}ID LINE rinnahkap {RESET}")
+print(f"{BLUE}FB เครื่องฟื้นฟูแบตเตอรี่{RESET}")
+
+LIGHT_YELLOW = "\033[93m"  # สีเหลืองอ่อน
+RESET = "\033[0m"  # รีเซ็ตสีกลับเป็นค่าเริ่มต้น
+
+print(f"{LIGHT_YELLOW}▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄{RESET}")
 print ("\n")
-ip_start=input("\033[1;31mกรุณาใส่ CIDR: \033[0m").split('.')
+ip_start=input("\033[31m" + "กรุณาใส่ ไอพีโฮสต์:" + "\033[0m").split('.')
+
 
 if len(ip_start[-1].split('/')) == 2:
     subnet = ip_start[-1].split('/')[1]
     ip_start[-1] = ip_start[-1].split('/')[0]
-    ip = Network(*ip_start)
-    ip.set_subnet(subnet)
+    ip = เครือข่าย(*ip_start)
+    ip.กำหนดซับเน็ต(subnet)
 else:
-    ip_end = input('\033[1;31mกรุณาใส่ IP สุดท้ายของเครือข่าย: \033[0m').split('.')
-    ip = Network(*ip_start)
-    ip.set_end(*ip_end)
+    ip_end = input('กรุณาใส่ IP สุดท้ายของเครือข่าย: ').split('.')
+    ip = เครือข่าย(*ip_start)
+    ip.กำหนดจุดสิ้นสุด(*ip_end)
 
-print("\033[1;33m<...กำลัง ping {ip.start_ip}-{ip.end_ip}...>\033[0m\n")
 
-responses = []
-start = time()
+print("\033[33m" + f"<...กำลังสแกน {ip.start_ip}-{ip.end_ip}...>" + "\033[0m\n")
+
+
+
+การตอบสนอง = []
+เริ่ม = time()
 
 with ThreadPoolExecutor(max_workers=(os.cpu_count() or 1) * 50) as executor:
-    for i in tqdm(executor.map(scan, ip), total=len(ip), unit=' IP'):
+    for i in tqdm(executor.map(สแกน, ip), total=len(ip), unit=' IP'):
         if i:
-            responses.append(i)
+            การตอบสนอง.append(i)
             if VERBOSE:
-                print("\033[1;92m" + f"{i}" + "\033[0m", end="")
-                print("\033[33m" + " ping สำเร็จ ✓" + "\033[0m")
-                with open('ping.txt', 'a') as f:
-                    f.write(f"{i}\n")
+                print("\033[1;92m" + f"{i}" + "\033[0m",end="")
+                print("\033[33m" + " สแกนสำเร็จ ✓" + "\033[0m")
+                f=open('ping.txt','a')
+                f.write("\033[32m" + f"{i}" + "\033[0m\n")
+                f.close()
 
-end = time()
-took = int(end - start)
-print("\n")
-print("\033[35m" + f"⌚เวลาที่ใช้ในการรัน: " + "\033[0m", end="")
-print("\033[36m" + f"{took} วินาที" + "\033[0m")
-print("\033[2;32m" + "ผลลัพธ์รวม >> ping.txt" + "\033[0m")
+สิ้นสุด = time()
+ใช้เวลา = int(สิ้นสุด - เริ่ม)
+print ("\n")
+print("\033[35m" + f"⌚ เวลาที่ใช้ในการดำเนินการ:" + "\033[0m",end="")
 
-
+print("\033[36m" + f" {ใช้เวลา} วินาที" + "\033[0m")
+print("\033[2;32m" + "ผลลัพธ์ทั้งหมดถูกบันทึกใน >> ping.txt" + "\033[0m")
