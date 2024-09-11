@@ -7,10 +7,10 @@ pkg install -y wget && pkg install -y python
 pip install tqdm
 pip install ping3
 
-# ลิงก์จาก GitHub สำหรับดาวน์โหลดไฟล์ pingmaster.py
-wget --no-check-certificate 'https://raw.githubusercontent.com/EkromSSH/pingmaster/main/pingmaster.py' -O pingmaster 
+# ลิงก์ GitHub สำหรับดาวน์โหลดไฟล์ pingmaster.py
+wget --no-check-certificate 'https://raw.githubusercontent.com/EkromSSH/pingmaster/main/pingmaster.py' -O pingmaster
 
-chmod +x pingmaster 
+chmod +x pingmaster
 mv pingmaster $PREFIX/bin/pingmaster
 
 echo -e "\033[1;32mScript executed successfully \033[0m"
