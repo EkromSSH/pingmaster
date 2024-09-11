@@ -8,7 +8,7 @@ pip install tqdm
 pip install ping3
 
 # ลิงก์ GitHub สำหรับดาวน์โหลดไฟล์ pingmaster.py
-wget --no-check-certificate 'https://raw.githubusercontent.com/EkromSSH/pingmaster/main/pingmaster.py' -O pingmaster
+wget --no-check-certificate 'https://raw.githubusercontent.com/EkromSSH/pingmaster/master/pingmaster.py' -O pingmaster
 
 chmod +x pingmaster
 mv pingmaster $PREFIX/bin/pingmaster
