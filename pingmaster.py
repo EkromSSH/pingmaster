@@ -7,22 +7,23 @@ import os
 from tqdm import tqdm
 from ping3 import ping
 
-# ตั้งค่าตัวแปรพื้นฐาน
-TIMEOUT = 30  # ระยะเวลารอการเชื่อมต่อ
-VERBOSE = True  # แสดงข้อมูลเพิ่มเติม
-DEBUG = False  # แสดงข้อความดีบัก
-PROXY = 'http://1.1.1.1:80'  # พร็อกซี (หากจำเป็น)
+TIMEOUT = 30
+VERBOSE = True
+DEBUG = False
+PROXY = 'http://1.1.1.1:80'
+
 
 class เครือข่าย:
     def __init__(self, a=1, b=1, c=1, d=1):
         """
-        ตัวอย่าง: 192.168.0.100
-        a.b.c.d
+        192.168.0.100
+         a . b .c. d
         :param a: บิตแรก 8 บิต
-        :param b: บิตที่สอง 8 บิต
-        :param c: บิตที่สาม 8 บิต
+        :param b: บิตถัดไป 8 บิต
+        :param c: บิตถัดไป 8 บิต
         :param d: บิตสุดท้าย 8 บิต
         """
+
         self.a = int(a)
         self.b = int(b)
         self.c = int(c)
@@ -36,15 +37,15 @@ class เครือข่าย:
         self.end_c = 255
         self.end_d = 255
 
-    def ตั้งค่าจุดสิ้นสุด(self, end_a, end_b, end_c, end_d):
+    def กำหนดจุดสิ้นสุด(self, end_a, end_b, end_c, end_d):
         self.end_a = int(end_a)
         self.end_b = int(end_b)
         self.end_c = int(end_c)
         self.end_d = int(end_d)
 
-    def ตั้งค่าซับเน็ต(self, subnet_mask):
+    def กำหนดซับเน็ต(self, subnet_mask):
         """
-        :param subnet_mask: จำนวนบิตของเครือข่าย (0-31), ประเภท: int
+        :param subnet_mask: จำนวนบิตเครือข่าย (0-31), ประเภท: int
         """
         subnet_mask = int(subnet_mask)
         sub_a = ''
@@ -100,30 +101,31 @@ class เครือข่าย:
         return f'{self.a}.{self.b}.{self.c}.{self.d}'
 
     def __gt__(self, other):
-        return self.a > other.aและ self.b > other.bและ self.c > other.cและ self.d > other.d
+        return self.a > other.a and self.b > other.b and self.c > other.c and self.d > other.d
 
     def __lt__(self, other):
-        return self.a < other.aและ self.b < other.bและ self.c < other.cและ self.d < other.d
+        return self.a < other.a and self.b < other.b and self.c < other.v and self.d < other.d
 
     def __eq__(self, other):
-        return self.a == other.aและ self.b == other.bและ self.c == other.cและ self.d == other.d
+        return self.a == other.a and self.b == other.b and self.c == other.c and self.d == other.d
 
     def __str__(self):
         return f'{self.a}.{self.b}.{self.c}.{self.d}'
 
     def __repr__(self):
-        return f'<เครือข่าย เริ่มต้น: {self.start_a}.{self.start_b}.{self.start_c}.{self.start_d} สิ้นสุด: {self.end_a}.{self.end_b}.{self.end_c}.{self.end_d}>'
+        return f'<เครือข่าย เริ่มต้น: {self.start_a}.{self.start_b}.{self.start_c}.{self.start_d}  ' \
+               f'สิ้นสุด: {self.end_a}.{self.end_b}.{self.end_c}.{self.end_d}>'
 
     def __len__(self):
         return (self.end_a - self.start_a or 1) * (self.end_b - self.start_b or 1) * \
                (self.end_c - self.start_c or 1) * (self.end_d - self.start_d or 1)
 
     @property
-    def ip_สิ้นสุด(self):
+    def end_ip(self):
         return f'{self.end_a}.{self.end_b}.{self.end_c}.{self.end_d}'
 
     @property
-    def ip_เริ่มต้น(self):
+    def start_ip(self):
         return f'{self.start_a}.{self.start_b}.{self.start_c}.{self.start_d}'
 
     def รีเซ็ต(self):
@@ -135,57 +137,82 @@ class เครือข่าย:
 
 def สแกน(ip_host):
     try:
-        ค่า_ping = ping(ip_host, size=8)
+        ping_val = ping(ip_host, size=8)
     except Exception as e:
-        ค่า_ping = None
+        ping_val = None
         if DEBUG:
             print(ip_host, e)
         
 
-    if ค่า_ping is not None:
-        การตอบสนอง = None
+    if ping_val is not None:
+        response = None
         try:
-            การตอบสนอง = urllib.request.urlopen('http://' + ip_host, timeout=TIMEOUT)
-            รหัสสถานะ = การตอบสนอง.getcode()
-            ผลลัพธ์ = ip_host
+            response = urllib.request.urlopen(
+                'http://' + ip_host, timeout=TIMEOUT)
+            status_code = response.getcode()
+            rv = ip_host
          
         except urllib.error.HTTPError as e:
-            ผลลัพธ์ = ip_host
+            rv = ip_host
         except Exception as e:
             if DEBUG:
                 print(e)
-            ผลลัพธ์ = ip_host
+            rv = ip_host
             
 
         finally:
-            if การตอบสนอง is not None:
-                การตอบสนอง.close()
-        return ผลลัพธ์
+            if response is not None:
+                response.close()
+        return rv
     else:
         return
 
-# การแสดงผลหน้าจอ
-print("\033[1;35m╔═══╗──────╔═╗╔═╗─────╔╗\n║╔═╗║──────║║╚╝║║────╔╝╚╗\n║╚═╝╠╦═╗╔══╣╔╗╔╗╠══╦═╩╗╔╬══╦═╗\n║╔══╬╣╔╗╣╔╗║║║║║║╔╗║══╣║║║═╣╔╝\n║║──║║║║║╚╝║║║║║║╔╗╠══║╚╣║═╣║\n╚╝──╚╩╝╚╩═╗╠╝╚╝╚╩╝╚╩══╩═╩══╩╝\n────────╔═╝║\n────────╚══╝\033[0m")
-print("▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄")
-print("░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░")
-print("\033[1;36mพัฒนาโดย: EKROMVPN\033[0m")
-print("\033[1;32mTelegram: @Akucinta\033[0m")
-print("\033[1;34mYouTube: @EKROM\033[0m")
-print("▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄")
-print("\n")
-ip_เริ่มต้น = input("\033[1;31mกรุณาใส่ IP โฮสต์: \033[0m").split('.')
 
-if len(ip_เริ่มต้น[-1].split('/')) == 2:
-    ซับเน็ต = ip_เริ่มต้น[-1].split('/')[1]
-    ip_เริ่มต้น[-1] = ip_เริ่มต้น[-1].split('/')[0]
-    ip = เครือข่าย(*ip_เริ่มต้น)
-    ip.ตั้งค่าซับเน็ต(ซับเน็ต)
+
+GREEN = "\033[32m"  # สีเขียวเข้ม
+RESET = "\033[0m"  # รีเซ็ตสีกลับเป็นค่าเริ่มต้น
+
+print(f"{GREEN}███████╗██╗  ██╗██████╗  ██████╗ ███╗   ███╗{RESET}")
+print(f"{GREEN}██╔════╝██║ ██╔╝██╔══██╗██╔═══██╗████╗ ████║{RESET}")
+print(f"{GREEN}█████╗  █████╔╝ ██████╔╝██║   ██║██╔████╔██║{RESET}")
+print(f"{GREEN}██╔══╝  ██╔═██╗ ██╔══██╗██║   ██║██║╚██╔╝██║{RESET}")
+print(f"{GREEN}███████╗██║  ██╗██║  ██║╚██████╔╝██║ ╚═╝ ██║{RESET}")
+print(f"{GREEN}╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚═╝     ╚═╝{RESET}")
+
+GREEN = "\033[32m"  # สีเขียว
+RESET = "\033[0m"    # รีเซ็ตสีกลับเป็นค่าเริ่มต้น
+
+print(f"{GREEN}▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄{RESET}")
+print(f"{GREEN}░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░░ ░{RESET}")
+BLUE = "\033[34m"  # สีน้ำเงิน (ฟ้า)
+RESET = "\033[0m"  # รีเซ็ตสีกลับเป็นค่าเริ่มต้น
+
+print(f"{BLUE}พัฒนาโดย:EKROMVPN{RESET}")
+print(f"{BLUE}ID LINE rinnahkap {RESET}")
+print(f"{BLUE}FB เครื่องฟื้นฟูแบตเตอรี่{RESET}")
+
+LIGHT_YELLOW = "\033[93m"  # สีเหลืองอ่อน
+RESET = "\033[0m"  # รีเซ็ตสีกลับเป็นค่าเริ่มต้น
+
+print(f"{LIGHT_YELLOW}▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄▄ ▄{RESET}")
+print ("\n")
+ip_start=input("\033[31m" + "กรุณาใส่ ไอพีโฮสต์:" + "\033[0m").split('.')
+
+
+if len(ip_start[-1].split('/')) == 2:
+    subnet = ip_start[-1].split('/')[1]
+    ip_start[-1] = ip_start[-1].split('/')[0]
+    ip = เครือข่าย(*ip_start)
+    ip.กำหนดซับเน็ต(subnet)
 else:
-    ip_สิ้นสุด = input('กรุณาใส่ IP สุดท้ายของเครือข่าย: ').split('.')
-    ip = เครือข่าย(*ip_เริ่มต้น)
-    ip.ตั้งค่าจุดสิ้นสุด(*ip_สิ้นสุด)
+    ip_end = input('กรุณาใส่ IP สุดท้ายของเครือข่าย: ').split('.')
+    ip = เครือข่าย(*ip_start)
+    ip.กำหนดจุดสิ้นสุด(*ip_end)
 
-print("\033[1;33m<...กำลังสแกน {ip.เริ่ม_ip}-{ip.สิ้นสุด_ip}...>\033[0m\n")
+
+print("\033[33m" + f"<...กำลังสแกน {ip.start_ip}-{ip.end_ip}...>" + "\033[0m\n")
+
+
 
 การตอบสนอง = []
 เริ่ม = time()
@@ -196,13 +223,16 @@ with ThreadPoolExecutor(max_workers=(os.cpu_count() or 1) * 50) as executor:
             การตอบสนอง.append(i)
             if VERBOSE:
                 print("\033[1;92m" + f"{i}" + "\033[0m",end="")
-                print("\033[1;33m" + " สแกนสำเร็จ ✓" + "\033[0m")
-                with open('ping.txt', 'a') as f:
-                    f.write(f"{i}\n")
+                print("\033[33m" + " สแกนสำเร็จ ✓" + "\033[0m")
+                f=open('ping.txt','a')
+                f.write("\033[32m" + f"{i}" + "\033[0m\n")
+                f.close()
 
 สิ้นสุด = time()
 ใช้เวลา = int(สิ้นสุด - เริ่ม)
-print("\n")
-print("\033[1;35m⌚ เวลาในการดำเนินการ: \033[0m", end="")
-print("\033[1;36m" + f" {ใช้เวลา} วินาที" + "\033[0m")
-print("\033[2;32mผลลัพธ์สะสม >> สิ้นสุดการสแกน\033[0m")
+print ("\n")
+print("\033[35m" + f"⌚ เวลาที่ใช้ในการดำเนินการ:" + "\033[0m",end="")
+
+print("\033[36m" + f" {ใช้เวลา} วินาที" + "\033[0m")
+print("\033[2;32m" + "ผลลัพธ์ทั้งหมดถูกบันทึกใน >> ping.txt" + "\033[0m")
+
